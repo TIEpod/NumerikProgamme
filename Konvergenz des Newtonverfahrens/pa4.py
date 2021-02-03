@@ -113,9 +113,9 @@ def aufgabe4():
 def phase(z):
     x,y = z.real,z.imag
     if x>0:
-        phi = np.arctan(y/x)%np.pi
+        phi = np.arctan(y/x)
     if x<0:
-        phi = -np.arctan(y/x)%np.pi
+        phi = -np.arctan(y/x)
     if x==0:
         if y>0:
             phi = np.pi/2
@@ -146,11 +146,13 @@ def aufgabe5():
         for j in range(Phase.shape[1]):
             #Phase[i][j] = phase(V[i][j])
             #Phase[i][j] = np.arctan2(V[i][j].imag,V[i][j].real)
+            Phase[i][j] = np.angle(V[i][j])
+            """
             phi = np.angle(V[i][j])
             if phi == np.pi:
                 Phase[i][j]=-phi
             else:
-                Phase[i][j]=phi
+                Phase[i][j]=phi"""
     plt.imshow(Phase)
     plt.show()
 
