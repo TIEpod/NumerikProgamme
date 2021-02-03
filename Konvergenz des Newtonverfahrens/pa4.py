@@ -63,8 +63,6 @@ def exercise3():
 #def means512():
 #    means = np.array([i*(/512+j/ for i in range(512)])
     #print(means)
-    
-    
     #return
 
 def exercise4():
@@ -153,7 +151,7 @@ def aufgabe5():
                 Phase[i][j]=-phi
             else:
                 Phase[i][j]=phi"""
-    plt.imshow(Phase)
+    plt.imshow(Phase, cmap='hsv')
     plt.show()
 
     #C ist die colourmap zur Visualisierung
