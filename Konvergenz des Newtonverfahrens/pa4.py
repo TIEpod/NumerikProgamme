@@ -152,21 +152,8 @@ def aufgabe5():
     plt.title("Aufabe 5")
     plt.show()
 
-
-def opt(dF, hF, x0, delta=PREC, epsilon=PREC, maxIter=100):
-    x = x0
-
-    for i in range(maxIter):
-        y = np.copy(x)  # vorheriges folgenglied
-
-        x = x - np.linalg.inv(hF(x)) @ dF(x)
-
-        if norm(x - y) < delta or norm(dF(x)) < epsilon:
-            return x
-    return x
-
 def mini(dF, hF, x0, delta=PREC, epsilon=PREC, maxIter=100):
-    """Macht genau das gleiche wie die Funktion speichert nur auch die zwischen
+    """Macht genau das gleiche wie die Funktion opt speichert nur auch die zwischen
     Schritt in IterVal"""
     x = x0
     IterVal = []
@@ -178,18 +165,6 @@ def mini(dF, hF, x0, delta=PREC, epsilon=PREC, maxIter=100):
         if norm(x - y) < delta or norm(dF(x)) < epsilon:
             return x, IterVal
     return x, IterVal
-
-
-def exercise6():
-    f = lambda x: (x[0] + 1) ** 4 + (x[1] - 1) ** 4
-    df = lambda x: 4 * np.array([(x[0] + 1) ** 3, (x[1] + 1) ** 3])
-    hf = lambda x: 12 * np.array([[(x[0] + 1) ** 2, 0], [0, (x[1] - 1) ** 2]])  # pos def
-
-    x0 = [-1.1, 1.1]
-    mini = opt(df, hf, x0)
-
-    print("Ein Minima von f liegt bei", list(np.around(mini, decimals=2)))
-    print("Da die Hessematrix in allen Stellen streng positiv definit ist, ist dies das einzige Extrema. ")
 
 def z_function(x,y):
     """Die Funktion aus Aufgabe 6"""
@@ -257,26 +232,3 @@ def exercise7():
     plt.imshow(C)
     plt.title("Aufgabe 7")
     plt.show()
-
-exercise2()
-exercise3()
-aufgabe4()
-aufgabe5()
-aufgabe6()
-exercise7()
-
-"""
-    roots = [complex(-0.809017,-0.587785), complex(-0.809017,0.587785),
-             complex(0.309017,-0.951057),complex(0.309017, 0.981057),complex(1,0)]
-"""
-
-"""
-print(phase(1))
-print(phase(1/np.sqrt(2)+1/np.sqrt(2)*1j))
-print(phase(0+1j))
-print(phase((1/np.sqrt(2))*(-1+1j)))
-print(phase(-1+0j))
-print(phase((1/np.sqrt(2))*(-1-1j)))
-print(phase(0-1j))
-print(phase((1/np.sqrt(2))*(1-1j)))
-"""
