@@ -112,15 +112,16 @@ def phase(z):
     x,y = z.real,z.imag
     if x>0:
         phi = np.arctan(y/x)
-    if x<0:
-        phi = -np.arctan(y/x)
+    if x<0 and y>0:
+        phi = np.arctan(y/x)+np.pi
+    if x<0 and y<=0:
+        phi = np.arctan(y/x)-np.pi
     if x==0:
         if y>0:
             phi = np.pi/2
         if y<0:
             phi = -np.pi/2
-    print(phi)
-    if not (-np.pi<=phi and phi<=np.pi):
+    if not (-np.pi<=phi and phi<np.pi):
         print('damn fuck {}'.format(phi))
     return phi
 
@@ -131,38 +132,36 @@ def aufgabe5():
     f = lambda x: x ** 5 - 1
     df = lambda x: 5 * x ** 4
 
+    """
     roots = [complex(-0.809017,-0.587785), complex(-0.809017,0.587785),
              complex(0.309017,-0.951057),complex(0.309017, 0.981057),complex(1,0)]
+    """
 
     V = np.empty_like(B)
     for i in range(V.shape[0]):
         for j in range(V.shape[1]):
-            V[i][j] = newton(f, df, B[i][j],delta=10**(-14),epsilon=10**(-14),maxIter=5)
+            V[i][j] = newton(f, df, B[i][j],delta=10**(-14),epsilon=10**(-14),maxIter=10)
 
     Phase = np.empty(shape=V.shape)
     for i in range(Phase.shape[0]):
         for j in range(Phase.shape[1]):
-            #Phase[i][j] = phase(V[i][j])
+            Phase[i][j] = phase(V[i][j])
             #Phase[i][j] = np.arctan2(V[i][j].imag,V[i][j].real)
-            Phase[i][j] = np.angle(V[i][j])
-            """
-            phi = np.angle(V[i][j])
-            if phi == np.pi:
-                Phase[i][j]=-phi
-            else:
-                Phase[i][j]=phi"""
+            #Phase[i][j] = np.angle(V[i][j])
+
     plt.imshow(Phase, cmap='hsv')
     plt.show()
 
-    #C ist die colourmap zur Visualisierung
-    C = np.ndarray(shape=V.shape)
-    for i in range(C.shape[0]):
-        for j in range(C.shape[1]):
-            C[i][j] = toroot(V[i][j], roots, 10 ** (-1))
-
-    #plt.imshow(C)
-    #plt.show()
-
+"""
+print(phase(1))
+print(phase(1/np.sqrt(2)+1/np.sqrt(2)*1j))
+print(phase(0+1j))
+print(phase((1/np.sqrt(2))*(-1+1j)))
+print(phase(-1+0j))
+print(phase((1/np.sqrt(2))*(-1-1j)))
+print(phase(0-1j))
+print(phase((1/np.sqrt(2))*(1-1j)))
+"""
 
 #means512()
 #exercise2()
