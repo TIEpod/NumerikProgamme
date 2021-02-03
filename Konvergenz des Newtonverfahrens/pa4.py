@@ -60,14 +60,6 @@ def exercise3():
     print("Die Nullstellen nach dem Newton-Verfahren sind %f und %f" % (g(root)[0], g(root)[1]))
     return
 
-#def means512():
-#    means = np.array([i*(/512+j/ for i in range(512)])
-    #print(means)
-    #return
-
-def exercise4():
-    h  = lambda x: x**3 -1
-    dh = lambda x: 3*x**2
 
 def toroot(x,roots,epsilon):
     '''Überprüft für einen Wert x ob dieser eine Nähe epsilon zu einer der
@@ -111,6 +103,7 @@ def aufgabe4():
             C[i][j] = toroot(V[i][j],roots,10**(-3))
 
     plt.imshow(C)
+    plt.title("Aufgabe 4")
     plt.show()
 
 
@@ -129,8 +122,6 @@ def phase(z):
             phi = np.pi/2
         if y<0:
             phi = -np.pi/2
-    if not (-np.pi<=phi and phi<np.pi):
-        print('damn fuck {}'.format(phi))
     return phi
 
 def aufgabe5():
@@ -158,12 +149,8 @@ def aufgabe5():
 
     #hsv ist eine Circle Farbkarte, sodass -pi und pi die gleiche Farbe haben.
     plt.imshow(Phase, cmap='hsv')
+    plt.title("Aufabe 5")
     plt.show()
-
-#means512()
-#exercise2()
-#aufgabe4()
-#aufgabe5()
 
 
 def opt(dF, hF, x0, delta=PREC, epsilon=PREC, maxIter=100):
@@ -178,6 +165,20 @@ def opt(dF, hF, x0, delta=PREC, epsilon=PREC, maxIter=100):
             return x
     return x
 
+def mini(dF, hF, x0, delta=PREC, epsilon=PREC, maxIter=100):
+    """Macht genau das gleiche wie die Funktion speichert nur auch die zwischen
+    Schritt in IterVal"""
+    x = x0
+    IterVal = []
+    for i in range(maxIter):
+        IterVal.append(x)
+        y = np.copy(x)  # vorheriges folgenglied
+
+        x = x - np.linalg.inv(hF(x)) @ dF(x)
+        if norm(x - y) < delta or norm(dF(x)) < epsilon:
+            return x, IterVal
+    return x, IterVal
+
 
 def exercise6():
     f = lambda x: (x[0] + 1) ** 4 + (x[1] - 1) ** 4
@@ -190,9 +191,49 @@ def exercise6():
     print("Ein Minima von f liegt bei", list(np.around(mini, decimals=2)))
     print("Da die Hessematrix in allen Stellen streng positiv definit ist, ist dies das einzige Extrema. ")
 
+def z_function(x,y):
+    """Die Funktion aus Aufgabe 6"""
+    return (x+1)**4+(y-1)**4
+
+def aufgabe6():
+    f = lambda x: (x[0] + 1) ** 4 + (x[1] - 1) ** 4
+    df = lambda x: 4 * np.array([(x[0] + 1) ** 3, (x[1] + 1) ** 3])
+    hf = lambda x: 12 * np.array([[(x[0] + 1) ** 2, 0], [0, (x[1] - 1) ** 2]])  # pos def
+    x0 = [-1.1, 1.1]
+
+    # in ItrVal stehen die die x^(k) für alle Iterationsschritte
+    m, ItrVal = mini(df, hf, x0)
+
+    x = np.linspace(-1.5,-0.5,60)
+    y = np.linspace(0.5, 1.5,60)
+
+    #Plotten des Graphen
+    ax = plt.axes(projection="3d")
+    plt.title("Aufgabe 6")
+    X, Y = np.meshgrid(x, y)
+    Z = z_function(X, Y)
+    ax.plot_surface(X, Y, Z)
+
+    #Beschränken der Achsen. Beim scattern verschiebt sich sonst
+    #später vielleich etwas
+    (xmin, xmax), (ymin, ymax), (zmin, zmax) = ax.get_xbound(), ax.get_ybound(), ax.get_zbound()
+    ax.set(xlim=(xmin, xmax), ylim=(ymin, ymax), zlim=(zmin, zmax))
+    ax.set_xlabel("x-Achse")
+    ax.set_ylabel("y-Achse")
+    ax.set_zlabel("z-Achse")
+
+    #Plotten der konvergenz Punkte lassen sich nur schwer sehen.
+    #Besser wenn man den Graphen von unten betrachtet.
+    A = np.array([x[0] for x in ItrVal])
+    B = np.array([x[1] for x in ItrVal])
+    A, B = np.meshgrid(A,B)
+    C = z_function(A,B)
+    ax.scatter(A, B, C, color='forestgreen', marker='o')
+
+    plt.show()
+
 
 def exercise7():
-    seq = lambda z, c: z ** 2 + c
 
     xH = np.linspace(start=-1.5, stop=.5, num=1024, endpoint=True)
     yH = np.linspace(start=-1, stop=1, num=1024, endpoint=True)
@@ -214,9 +255,14 @@ def exercise7():
             C[i][j] = count
 
     plt.imshow(C)
+    plt.title("Aufgabe 7")
     plt.show()
 
-#exercise6()
+exercise2()
+exercise3()
+aufgabe4()
+aufgabe5()
+aufgabe6()
 exercise7()
 
 """
